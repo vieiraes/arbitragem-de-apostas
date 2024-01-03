@@ -1,6 +1,6 @@
 # Calculadora de Apostas Arbitrárias
 
-Esta é uma aplicadora de apostas que ajuda a calcular a distribuição ideal de apostas entre dois times, com base nas odds oferecidas e no retorno desejado.
+Esta é uma app de cálculo de apostas que ajuda a calcular a distribuição ideal de apostas entre dois times, com base nas odds oferecidas e no retorno desejado.
 
 ## Funcionalidades
 

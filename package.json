@@ -1,0 +1,27 @@
+{
+  "name": "arbitragem-de-apostas",
+  "version": "1.0.0",
+  "description": "Esta é uma app de apostas que ajuda a calcular a distribuição ideal de apostas entre dois times, com base nas odds oferecidas e no retorno desejado.",
+  "main": "index.js",
+  "scripts": {
+    "web": "node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vieiraes/arbitragem-de-apostas.git"
+  },
+  "keywords": [
+    "bet",
+    "apostas",
+    "betting"
+  ],
+  "author": "Bruno Vieira",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vieiraes/arbitragem-de-apostas/issues"
+  },
+  "homepage": "https://github.com/vieiraes/arbitragem-de-apostas#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
