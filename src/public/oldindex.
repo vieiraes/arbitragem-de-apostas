@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Calculadora de Apostas Arbitrárias</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .calculadora-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        .titulo {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+
+        .total-investido {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .total-investido span {
+            font-weight: bold;
+        }
+
+        .mensagem-erro {
+            color: red;
+            font-size: 0.8em;
+            display: none;
+            /* Escondido por padrão */
+        }
+
+        @media (max-width: 576px) {
+            .calculadora-container {
+                margin: 10px;
+                padding: 10px;
+            }
+
+            h2,
+            .form-group,
+            button {
+                font-size: 1em;
+            }
+        }
+    </style>
+    <script>
+        function calcularApostas() {
+            var oddTimeA = document.getElementById("oddTimeA").value;
+            var oddTimeB = document.getElementById("oddTimeB").value;
+            var retornoDesejado = document.getElementById("retornoDesejado").value;
+            var mensagemErro = document.getElementById("mensagemErro");
+
+            // Verifica se algum campo está vazio
+            if (oddTimeA === '' || oddTimeB === '' || retornoDesejado === '') {
+                mensagemErro.style.display = 'block';
+                return;
+            } else {
+                mensagemErro.style.display = 'none';
+            }
+
+            oddTimeA = parseFloat(oddTimeA);
+            oddTimeB = parseFloat(oddTimeB);
+            retornoDesejado = parseFloat(retornoDesejado);
+
+            var apostaTimeA = retornoDesejado / oddTimeA;
+            var apostaTimeB = retornoDesejado / oddTimeB;
+
+            document.getElementById("apostaTimeA").innerText = 'R$ ' + apostaTimeA.toFixed(2);
+            document.getElementById("apostaTimeB").innerText = 'R$ ' + apostaTimeB.toFixed(2);
+            document.getElementById("totalInvestidoValor").innerText = 'R$ ' + (apostaTimeA + apostaTimeB).toFixed(2);
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="calculadora-container">
+                    <h2 class="titulo">Calculadora de Apostas Arbitrárias</h2>
+                    <div class="form-group">
+                        <label for="oddTimeA"><i class="fas fa-flag-checkered"></i> Odds do Time A:</label>
+                        <input type="number" step="1" min="0" class="form-control" id="oddTimeA"
+                            placeholder="Insira a odd do Time A">
+                    </div>
+                    <div class="form-group">
+                        <label for="oddTimeB"><i class="fas fa-flag-checkered"></i> Odds do Time B:</label>
+                        <input type="number" step="1" min="0" class="form-control" id="oddTimeB"
+                            placeholder="Insira a odd do Time B">
+                    </div>
+                    <div class="form-group">
+                        <label for="retornoDesejado"><i class="fas fa-coins"></i> Retorno Desejado:</label>
+                        <input type="number" step="1" min="0" class="form-control" id="retornoDesejado"
+                            placeholder="Insira o valor que deseja obter de retorno">
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="calcularApostas()"><i
+                            class="fas fa-calculator"></i> Calcular</button>
+                    <p id="mensagemErro" class="mensagem-erro">Por favor, preencha todos os campos.</p>
+                    <div class="mt-3">
+                        <p><i class="fas fa-hand-holding-usd"></i> Valor a apostar no Time A: <span id="apostaTimeA">R$
+                                0</span></p>
+                        <p><i class="fas fa-hand-holding-usd"></i> Valor a apostar no Time B: <span id="apostaTimeB">R$
+                                0</span></p>
+                    </div>
+                    <div class="total-investido">
+                        <p>Total Investido: <span id="totalInvestidoValor">R$ 0</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

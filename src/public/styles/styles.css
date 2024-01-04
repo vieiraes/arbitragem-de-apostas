@@ -1,0 +1,47 @@
+body {
+    background-color: #f5f5f5;
+}
+
+.calculadora-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
+
+.titulo {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.total-investido {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.total-investido span {
+    font-weight: bold;
+}
+
+.mensagem-erro {
+    color: red;
+    font-size: 0.8em;
+    display: none;
+    /* Escondido por padrão */
+}
+
+@media (max-width: 576px) {
+    .calculadora-container {
+        margin: 10px;
+        padding: 10px;
+    }
+
+    h2,
+    .form-group,
+    button {
+        font-size: 1em;
+    }
+}
