@@ -30,8 +30,14 @@
                         <input type="number" step="1" min="0" class="form-control" id="retornoDesejado"
                             placeholder="Insira o valor que deseja obter de retorno">
                     </div>
+
                     <button class="btn btn-primary btn-block" onclick="calcularApostas()"><i
                             class="fas fa-calculator"></i> Calcular</button>
+
+                                        
+                    <p id="mensagemErro" class="mensagem-erro">Por favor, preencha todos os campos.</p>
+                    <p id="mensagemInviableBet" class="mensagem-erro" style="display: none;">Não é possível apostas, pois é um investimento maior que o retorno esperado.</p>
+                    
                     <p id="mensagemErro" class="mensagem-erro">Por favor, preencha todos os campos.</p>
                     <p id="porcentagemGanho">Ganho previsto: <span id="valorPorcentagemGanho">0%</span></p>
                     <div class="mt-3">
