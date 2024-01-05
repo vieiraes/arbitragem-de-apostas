@@ -3,27 +3,29 @@ body {
 }
 
 .calculadora-container {
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
+    margin: 10px;
+    padding: 10px;
     border-radius: 15px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: white;
+    font-size: 1em;
+    /* Tamanho de fonte para dispositivos móveis */
 }
 
 .titulo {
     text-align: center;
     font-weight: bold;
-    font-size: 1.5em;
 }
 
 .total-investido {
     text-align: center;
-    margin-top: 15px;
+    margin-top: 0px;
 }
 
 .total-investido span {
     font-weight: bold;
+    color: black;
+    /* Cor padrão para o texto */
 }
 
 .mensagem-erro {
@@ -31,17 +33,28 @@ body {
     font-size: 0.8em;
     display: none;
     /* Escondido por padrão */
+    text-align: center;
 }
 
-@media (max-width: 576px) {
+.progress {
+    height: 10px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.progress-bar {
+    transition: width 0.5s ease;
+}
+
+/* Media Query para telas maiores */
+@media (min-width: 576px) {
     .calculadora-container {
-        margin: 10px;
-        padding: 10px;
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
     }
 
-    h2,
-    .form-group,
-    button {
-        font-size: 1em;
+    h2 {
+        font-size: 1.5em;
     }
 }
