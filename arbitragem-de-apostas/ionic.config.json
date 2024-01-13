@@ -1,7 +1,0 @@
-{
-  "name": "Arbitragem de Apostas",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react-vite"
-}
