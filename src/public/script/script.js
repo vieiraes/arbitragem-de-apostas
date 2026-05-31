@@ -79,7 +79,16 @@ async function carregarOportunidades() {
     tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm me-2"></div>Buscando oportunidades...</td></tr>';
 
     try {
-        const response = await fetch('/api/oportunidades');
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? '' 
+            : 'https://sua-api.onrender.com'; // O usuário trocará essa URL pela URL real do Render
+            
+        const response = await fetch(`${API_BASE_URL}/api/oportunidades`);
+        
+        if (!response.ok) {
+            throw new Error('Arquivo de oportunidades não encontrado');
+        }
+        
         const oportunidades = await response.json();
 
         if (oportunidades.length === 0) {
@@ -128,14 +137,18 @@ async function carregarOportunidades() {
 }
 
 async function dispararScraping() {
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? '' 
+        : 'https://sua-api.onrender.com';
+
     const btn = document.getElementById('btnScrape');
     if (btn) {
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Buscando na Betano...';
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Buscando na Betano (pode demorar 30s)...';
         btn.disabled = true;
     }
     
     try {
-        const response = await fetch('/api/scrape', { method: 'POST' });
+        const response = await fetch(`${API_BASE_URL}/api/scrape`, { method: 'POST' });
         if (response.ok) {
             await carregarOportunidades();
         } else {

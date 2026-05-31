@@ -18,9 +18,9 @@ async function scrapeBetano() {
         ]
     });
 
-    const dataDir = path.join(__dirname, '../../data');
-    if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
+    const publicDir = path.join(__dirname, '../public');
+    if (!fs.existsSync(publicDir)) {
+        fs.mkdirSync(publicDir, { recursive: true });
     }
 
     try {
@@ -145,19 +145,11 @@ async function scrapeBetano() {
         
         console.log(`Jogos com ganho > 30% encontrados: ${jogosFormatados.length}`);
         
-        const dadosJson = {
-            fonte: 'Betano',
-            dataExtracao: new Date().toISOString(),
-            totalJogos: jogosFormatados.length,
-            jogos: jogosFormatados
-        };
-
-        const dataAtual = new Date().toISOString().split('T')[0];
-        const jsonFilePath = path.join(dataDir, `betano_jogos_${dataAtual}.json`);
-        fs.writeFileSync(jsonFilePath, JSON.stringify(dadosJson, null, 2));
+        const jsonFilePath = path.join(publicDir, 'oportunidades.json');
+        fs.writeFileSync(jsonFilePath, JSON.stringify(jogosFormatados, null, 2));
 
         console.log(`Dados salvos com sucesso em ${jsonFilePath}!`);
-        return dadosJson;
+        return jogosFormatados;
 
     } catch (error) {
         console.error('Erro durante o scraping via API:', error);

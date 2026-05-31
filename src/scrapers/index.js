@@ -6,7 +6,7 @@ async function runAllScrapers() {
         
         console.log('\n--- Betano Scraper ---');
         const betanoData = await scrapeBetano();
-        console.log(`Coletados ${betanoData.jogos.length} jogos da Betano\n`);
+        console.log(`Coletados ${betanoData.length} jogos da Betano\n`);
         
         // Aqui você pode adicionar outros scrapers no futuro
         // const bet365Data = await scrapeBet365();
