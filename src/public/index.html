@@ -14,7 +14,35 @@
     <div class="container py-4">
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">
-                <div class="card shadow">
+                <!-- Oportunidades Section -->
+                <div class="card shadow mb-4">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center border-bottom pt-4 pb-3">
+                        <h5 class="card-title mb-0 fw-bold text-dark"><i class="fas fa-radar me-2" style="color: var(--primary);"></i> Oportunidades (Betano)</h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary me-1" onclick="carregarOportunidades()" title="Recarregar Lista Local"><i class="fas fa-sync-alt"></i></button>
+                            <button id="btnScrape" class="btn btn-sm btn-primary" onclick="dispararScraping()"><i class="fas fa-robot me-2"></i> Buscar Novos Jogos</button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0" id="tabelaOportunidades">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Jogo</th>
+                                        <th>Odds (A / B)</th>
+                                        <th class="text-end">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3" class="text-center py-4 text-muted">Carregando oportunidades...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card shadow mb-4">
                     <div class="card-body">
                         <h2 class="card-title text-center mb-4">Calculadora de Apostas Arbitrárias</h2>
 
@@ -49,7 +77,7 @@
                             style="display: none;">Não é possível apostas, pois é um investimento maior que o retorno
                             esperado.</p>
 
-                        <div class="results-container p-3 bg-light rounded">
+                        <div class="results-container p-4 bg-light rounded border mt-2">
                             <!-- Ganho previsto no centro e maior -->
                             <div class="text-center mb-4">
                                 <p class="mb-1 fs-5 fw-bold">Ganho previsto:</p>
@@ -91,13 +119,15 @@
                                     style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
 
-                            <div class="total-investido text-center bg-white p-3 rounded border">
+                            <div class="total-investido text-center bg-white p-3 rounded border mt-4">
                                 <p class="mb-0 fw-bold fs-4">Total Investido: <span id="totalInvestidoValor"
                                         class="text-primary">R$ 0</span></p>
                             </div>
                         </div>
                     </div>
                 </div>
+                
+
             </div>
         </div>
     </div>

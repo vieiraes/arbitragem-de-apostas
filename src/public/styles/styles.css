@@ -1,60 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+:root {
+    --bg-color: #f1f5f9;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --primary: #f97316; /* Betano Orange */
+    --primary-hover: #ea580c;
+    --secondary: #10b981; /* Success Green */
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border-color: rgba(0, 0, 0, 0.08);
+}
+
 body {
-    background-color: #f5f5f5;
+    background-color: var(--bg-color);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+    background-attachment: fixed;
+    color: var(--text-main);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
 }
 
-.calculadora-container {
-    margin: 10px;
-    padding: 10px;
-    border-radius: 15px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: white;
-    font-size: 1em;
-    /* Tamanho de fonte para dispositivos móveis */
+/* Glassmorphism Cards */
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    color: var(--text-main);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.titulo {
-    text-align: center;
-    font-weight: bold;
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    border-radius: 16px 16px 0 0 !important;
+}
+
+/* Inputs Modernos */
+.form-control {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: var(--text-main);
+    border-radius: 10px;
+    padding: 12px 16px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.form-control:focus {
+    background-color: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(249, 115, 22, 0.15);
+    color: var(--text-main);
+}
+
+.form-label {
+    color: #475569;
+    font-weight: 600;
+}
+
+/* Botões */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.2);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(249, 115, 22, 0.3);
+    background: linear-gradient(135deg, var(--primary-hover), #c2410c);
+    color: white;
+}
+
+.btn-success-custom {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: none;
+    color: white;
+}
+
+/* Tabela Oportunidades */
+.table {
+    color: var(--text-main);
+}
+.table-light {
+    background-color: #f8fafc;
+    color: #475569;
+}
+.table-light th {
+    background-color: #f8fafc;
+    color: #475569;
+    border-bottom: 2px solid #e2e8f0;
+}
+.table td, .table th {
+    border-color: #f1f5f9;
+    background-color: transparent !important;
+}
+.table-hover tbody tr:hover td {
+    background-color: #f8fafc !important;
+    color: var(--text-main);
+}
+
+/* Badges e Destaques */
+.badge.bg-success {
+    background: linear-gradient(135deg, var(--secondary), #059669) !important;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+}
+
+.results-container {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0;
+}
+
+.results-container .card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
 }
 
 .total-investido {
-    text-align: center;
-    margin-top: 0px;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: var(--text-main);
 }
 
 .total-investido span {
-    font-weight: bold;
-    color: black;
-    /* Cor padrão para o texto */
+    color: var(--primary) !important;
 }
 
 .mensagem-erro {
-    color: red;
-    font-size: 0.8em;
-    display: none;
-    /* Escondido por padrão */
-    text-align: center;
+    border-radius: 10px;
+    font-weight: 600;
 }
 
-.progress {
-    height: 10px;
-    margin-top: 2px;
-    margin-bottom: 2px;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
 }
-
-.progress-bar {
-    transition: width 0.5s ease;
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
 }
-
-/* Media Query para telas maiores */
-@media (min-width: 576px) {
-    .calculadora-container {
-        max-width: 600px;
-        margin: auto;
-        padding: 20px;
-    }
-
-    h2 {
-        font-size: 1.5em;
-    }
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }

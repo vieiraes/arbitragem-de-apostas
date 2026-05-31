@@ -1,51 +1,80 @@
-# Calculadora de Apostas Arbitrárias
+<div align="center">
+  <img src="https://img.icons8.com/nolan/96/1A6DFF/C822FF/bullish.png" alt="Logo"/>
+  <h1>Arbitragem de Apostas (Surebet)</h1>
+  <p>Uma ferramenta moderna para calcular a distribuição ideal de valores em apostas arbitrárias, garantindo lucros matemáticos independentemente do resultado.</p>
 
-Uma ferramenta para calcular apostas arbitradas entre dois times, permitindo maximizar os ganhos independentemente do resultado da partida.
+  <p>
+    <a href="#sobre">Sobre</a> •
+    <a href="#como-funciona">Como Funciona</a> •
+    <a href="#tecnologias">Tecnologias</a> •
+    <a href="#como-usar">Como Usar</a>
+  </p>
+</div>
 
-## 📊 Acesso ao Sistema
+---
 
-O sistema está disponível em produção através do link:
-[https://calculadora-de-apostas-1d2e5.web.app/](https://calculadora-de-apostas-1d2e5.web.app/)
+## 🎯 Sobre o Projeto
 
-## 📋 Funcionalidades
+O **Arbitragem de Apostas** é um sistema completo composto por um robô coletor de odds (Web Scraper) e uma interface de cálculo avançada. Ele automatiza o processo de encontrar oportunidades onde as cotações de duas ou mais casas de apostas permitem cobrir todos os resultados possíveis com um lucro garantido (fenômeno conhecido como Surebet ou Arbitragem).
 
-- Calcula o valor ideal para apostar em cada time com base nas odds fornecidas
-- Apresenta o retorno desejado e o investimento total necessário
-- Exibe o ganho percentual garantido independente do resultado
-- Indicador visual de risco da aposta (baixo, médio, alto)
-- Análise da viabilidade da arbitragem
+Atualmente o sistema possui integração direta com a API da **Betano**, interceptando o tráfego de rede para coletar as odds mais recentes do Brasileirão (Séries A e B) evitando bloqueios automáticos (anti-bot).
 
-## 🧮 Como Funciona
+---
 
-A calculadora utiliza um algoritmo que determina a distribuição ideal dos valores de apostas entre as opções disponíveis. Basta inserir:
+## 🚀 Interface do Usuário
 
-1. As odds (cotações) para cada time
-2. O valor de retorno desejado
+![Tela Inicial](./docs/screenshot.png)
 
-O sistema então calcula:
-- Quanto deve ser apostado em cada time
-- O investimento total necessário
-- O ganho percentual garantido
-- Nível de risco da operação
+> **Dica:** A interface foi redesenhada com um visual premium limpo (Light Mode), focado na experiência de leitura rápida dos cálculos. Ela conta com um painel integrado que permite buscar novas oportunidades (com ganho >30%) em 5 ligas diferentes em tempo real, direto no navegador!
+
+---
+
+## ⚙️ Como Funciona?
+
+O projeto é dividido em três camadas:
+
+1. **Scraper Invisível (Puppeteer):** Escuta o tráfego de rede da Betano e intercepta o JSON interno (sem depender de ler a tela HTML, o que evita o bloqueio da Cloudflare).
+2. **Servidor API (Express):** Entrega as oportunidades filtradas (>30% de rentabilidade) para a interface em tempo real.
+3. **Calculadora Inteligente:** Você define quanto deseja **ter de retorno total**, e a calculadora diz exatamente quantos reais investir em cada aposta, mostrando sua análise de risco e a viabilidade da transação.
+
+---
 
 ## 💻 Tecnologias Utilizadas
 
-- HTML5
-- CSS3 com Bootstrap 5
-- JavaScript puro
-- Node.js com Express (backend simples)
+- **Frontend:** HTML5, CSS3 Moderno (Glassmorphism), Vanilla JavaScript, Bootstrap 5.
+- **Backend:** Node.js, Express.js.
+- **Automação/Scraping:** Puppeteer Extra, Stealth Plugin.
 
-## 🚀 Instalação Local
+---
 
+## 🛠️ Como Usar
+
+### 1. Requisitos
+Certifique-se de ter o [Node.js](https://nodejs.org/) instalado na sua máquina (v18 ou superior).
+
+### 2. Instalação
+Clone o repositório e instale as dependências:
 ```bash
-# Clone o repositório
-git clone https://github.com/vieiraes/arbitragem-de-apostas.git
-
-# Entre no diretório
+git clone https://github.com/seu-usuario/arbitragem-de-apostas.git
 cd arbitragem-de-apostas
-
-# Instale as dependências
 npm install
+```
 
-# Inicie o servidor
-npm start
+### 3. Rodando o Servidor Web e Interface
+Para visualizar a interface no navegador e ter os endpoints de API disponíveis:
+```bash
+npm run web
+```
+Acesse `http://localhost:3000` no seu navegador.
+
+### 4. Coletando Novas Oportunidades
+Para atualizar as oportunidades listadas na tela principal, abra outro terminal e execute o nosso robô para coletar as odds em tempo real da Betano:
+```bash
+npm run scrape
+```
+
+---
+
+<div align="center">
+  Feito com dedicação e matemática 🧮
+</div>
