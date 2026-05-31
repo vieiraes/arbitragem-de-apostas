@@ -81,7 +81,7 @@ async function carregarOportunidades() {
     try {
         const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
             ? '' 
-            : 'https://sua-api.onrender.com'; // O usuário trocará essa URL pela URL real do Render
+            : 'https://arbitragem-de-apostas.onrender.com';
             
         const response = await fetch(`${API_BASE_URL}/api/oportunidades`);
         
@@ -139,7 +139,7 @@ async function carregarOportunidades() {
 async function dispararScraping() {
     const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
         ? '' 
-        : 'https://sua-api.onrender.com';
+        : 'https://arbitragem-de-apostas.onrender.com';
 
     const btn = document.getElementById('btnScrape');
     if (btn) {
