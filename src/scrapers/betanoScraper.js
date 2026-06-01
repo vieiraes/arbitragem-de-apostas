@@ -11,11 +11,13 @@ async function scrapeBetano() {
     const browser = await puppeteer.launch({
         headless: "new",
         args: [
+            '--proxy-server=http://proxy-server.scraperapi.com:8001',
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-features=IsolateOrigins,site-per-process',
             '--disable-web-security'
-        ]
+        ],
+        ignoreHTTPSErrors: true
     });
 
     const publicDir = path.join(__dirname, '../public');
@@ -25,6 +27,13 @@ async function scrapeBetano() {
 
     try {
         const page = await browser.newPage();
+
+        // Autenticar no ScraperAPI
+        await page.authenticate({
+            username: 'scraperapi',
+            password: '051253436aab806cc07f27f90ef827db'
+        });
+
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
 
         let rawEventsData = [];
