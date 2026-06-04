@@ -1,9 +1,11 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const app = express();
 const path = require('path');
-const fs = require('fs');
 const { scrapeBetano } = require('./scrapers/betanoScraper');
+const { uploadOportunidades, downloadOportunidades } = require('./r2Storage');
 const port = process.env.PORT || 3000;
 
 // Configuração para servir arquivos estáticos localmente (se necessário)
@@ -11,40 +13,51 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors()); // Permite acesso de outros domínios (como o Firebase Hosting)
 app.use(express.json());
 
-// Memória temporária para servir oportunidades recentes caso a nuvem zere os arquivos
+// Cache em memória RAM como fallback de último recurso
 let cacheOportunidades = [];
 
-app.get('/api/oportunidades', (req, res) => {
-    // Tenta ler do arquivo primeiro (se rodou localmente e existe o arquivo)
-    const publicDir = path.join(__dirname, 'public');
-    const filePath = path.join(publicDir, 'oportunidades.json');
-    
+/**
+ * GET /api/oportunidades
+ * Tenta buscar do R2. Se falhar, usa o cache RAM.
+ */
+app.get('/api/oportunidades', async (req, res) => {
     try {
-        if (fs.existsSync(filePath)) {
-            const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-            return res.json(data);
-        }
+        const data = await downloadOportunidades();
+        return res.json(data);
     } catch (e) {
-        console.log("Erro lendo arquivo local, usando cache.");
+        console.log('R2 indisponível, usando cache RAM:', e.message);
+        return res.json(cacheOportunidades);
     }
-    
-    // Se o arquivo não existir (comum em servidores efêmeros), retorna da memória
-    return res.json(cacheOportunidades);
 });
 
+/**
+ * POST /api/scrape
+ * Dispara o scraping, salva resultado no R2 e atualiza o cache RAM.
+ */
 app.post('/api/scrape', async (req, res) => {
-    console.log("Iniciando web scraping remoto...");
+    console.log('Iniciando web scraping...');
     try {
         const data = await scrapeBetano();
-        cacheOportunidades = data; // Atualiza a memória RAM do servidor
-        console.log("Scraping finalizado via API na nuvem.");
-        res.json({ success: true, message: "Scraping concluído com sucesso.", data: data });
+
+        // Atualiza cache RAM
+        cacheOportunidades = data;
+
+        // Faz upload para o Cloudflare R2
+        await uploadOportunidades(data);
+
+        console.log('Scraping e upload para R2 finalizados com sucesso.');
+        res.json({
+            success: true,
+            message: `Scraping concluído. ${data.length} oportunidades salvas no R2.`,
+            data: data,
+        });
     } catch (error) {
         console.error(`Erro na execução do scraper: ${error}`);
-        return res.status(500).json({ error: "Erro ao executar o scraper", details: error.message });
+        return res.status(500).json({ error: 'Erro ao executar o scraper', details: error.message });
     }
 });
 
 app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
+    console.log(`Servidor rodando na porta ${port}`);
+    console.log(`R2 Bucket: ${process.env.R2_BUCKET || 'bucket-cf'}`);
 });
