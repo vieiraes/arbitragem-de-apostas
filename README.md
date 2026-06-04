@@ -1,74 +1,90 @@
 <div align="center">
-  <img src="https://img.icons8.com/nolan/96/1A6DFF/C822FF/bullish.png" alt="Logo"/>
+  <img src="./docs/hero.png" alt="Arbitragem de Apostas Banner" width="100%" />
   <h1>Arbitragem de Apostas (Surebet)</h1>
-  <p>Uma ferramenta moderna para calcular a distribuição ideal de valores em apostas arbitrárias, garantindo lucros matemáticos independentemente do resultado.</p>
+  <p><b>Transforme apostas esportivas em investimentos matemáticos com lucro garantido.</b></p>
 
   <p>
-    <a href="#sobre">Sobre</a> •
-    <a href="#como-funciona">Como Funciona</a> •
-    <a href="#tecnologias">Tecnologias</a> •
-    <a href="#como-usar">Como Usar</a>
+    <a href="#-o-que-é-o-produto">O Produto</a> •
+    <a href="#-como-funciona">Como Funciona</a> •
+    <a href="#-principais-recursos">Recursos</a> •
+    <a href="#-começando">Começando</a>
   </p>
 </div>
 
 ---
 
-## 🎯 Sobre o Projeto
+## 🎯 O que é o Produto?
 
-O **Arbitragem de Apostas** é um sistema completo composto por um robô coletor de odds (Web Scraper) e uma interface de cálculo avançada. Ele automatiza o processo de encontrar oportunidades onde as cotações de duas ou mais casas de apostas permitem cobrir todos os resultados possíveis com um lucro garantido (fenômeno conhecido como Surebet ou Arbitragem).
+O **Arbitragem de Apostas** não é uma plataforma de sorte, é uma ferramenta de **matemática financeira**. 
 
-Atualmente o sistema possui integração direta com a API da **Betano**, interceptando o tráfego de rede para coletar as odds mais recentes do Brasileirão (Séries A e B) evitando bloqueios automáticos (anti-bot).
+Muitas vezes, as cotações (odds) oferecidas para um mesmo jogo abrem margens interessantes. O nosso sistema varre a plataforma em tempo real e encontra oportunidades onde você pode apostar na **vitória de ambos os times**. Embora você perca em caso de empate, essa estratégia garante pelo menos **66.66% de chance de acerto** em cada partida.
+
+Esqueça a intuição e a sorte. Transforme seu capital em rendimentos consistentes baseados em dados.
 
 ---
 
-## 🚀 Interface do Usuário
+## 🚀 A Interface
 
-![Tela Inicial](./docs/screenshot.png)
+Desenhada para ser limpa, rápida e intuitiva. Você não precisa ser um expert em esportes, basta seguir os números.
 
-> **Dica:** A interface foi redesenhada com um visual premium limpo (Light Mode), focado na experiência de leitura rápida dos cálculos. Ela conta com um painel integrado que permite buscar novas oportunidades (com ganho >30%) em 5 ligas diferentes em tempo real, direto no navegador!
+![Dashboard do Calculador](./docs/dashboard.png)
+
+A nossa interface oferece:
+- **Painel em Tempo Real:** Novas oportunidades de lucro aparecem automaticamente na sua tela.
+- **Calculadora Inteligente:** Você digita o quanto deseja investir, e o sistema diz exatamente quanto colocar em cada aposta para garantir o seu retorno.
+- **Design Premium:** Foco na leitura rápida dos dados para você não perder nenhuma oportunidade.
 
 ---
 
 ## ⚙️ Como Funciona?
 
-O projeto é dividido em três camadas:
+Usar a plataforma é simples e requer apenas 3 passos:
 
-1. **Scraper Invisível (Puppeteer):** Escuta o tráfego de rede da Betano e intercepta o JSON interno (sem depender de ler a tela HTML, o que evita o bloqueio da Cloudflare).
-2. **Servidor API (Express):** Entrega as oportunidades filtradas (>30% de rentabilidade) para a interface em tempo real.
-3. **Calculadora Inteligente:** Você define quanto deseja **ter de retorno total**, e a calculadora diz exatamente quantos reais investir em cada aposta, mostrando sua análise de risco e a viabilidade da transação.
+### 1. Encontre a Oportunidade
+Nosso robô trabalha nos bastidores, vasculhando exclusivamente a **Betano** (por enquanto). Ele monitora os jogos do **Brasileirão Séries A, B, C e D**, mas filtra inteligentemente e só traz para a sua tela as partidas que oferecem oportunidades com **odds maiores que 30% de chance de ganho**.
+
+### 2. Use a Calculadora
+Ao clicar na oportunidade, a calculadora se abre. Digite o seu **Objetivo de Retorno** ou o seu **Orçamento Disponível**. O sistema fará a matemática complexa instantaneamente.
+
+### 3. Faça as Entradas
+A plataforma te mostrará:
+* *"Coloque R$ 50,00 na vitória do Time A"*
+* *"Coloque R$ 15,00 na vitória do Time B"*
+
+Pronto! Ao focar apenas nas vitórias (66.66% de cobertura), você otimiza o seu orçamento e aumenta substancialmente o seu potencial de acerto.
 
 ---
 
-## 💻 Tecnologias Utilizadas
+## 🌟 Principais Recursos
 
-- **Frontend:** HTML5, CSS3 Moderno (Glassmorphism), Vanilla JavaScript, Bootstrap 5.
-- **Backend:** Node.js, Express.js.
-- **Automação/Scraping:** Puppeteer Extra, Stealth Plugin.
+- **Automação Invisível:** O sistema coleta dados em tempo real direto da fonte, superando bloqueios tradicionais.
+- **Alta Probabilidade (66.66%):** Ao cobrir a vitória de ambos os times, o sistema aumenta as suas chances estatísticas de ter um resultado positivo.
+- **Sem Achismos:** O sistema te diz exatamente onde e quanto colocar o seu dinheiro.
+- **Fácil de Usar:** Feito para investidores, não apenas para apostadores.
 
 ---
 
-## 🛠️ Como Usar
+## 🛠️ Começando (Para Desenvolvedores / Instalação)
 
-### 1. Requisitos
-Certifique-se de ter o [Node.js](https://nodejs.org/) instalado na sua máquina (v18 ou superior).
+Se você deseja rodar a sua própria instância do produto na sua máquina, siga os passos abaixo:
 
-### 2. Instalação
-Clone o repositório e instale as dependências:
+**1. Instalação**
+Certifique-se de ter o Node.js (v18+) instalado.
 ```bash
 git clone https://github.com/seu-usuario/arbitragem-de-apostas.git
 cd arbitragem-de-apostas
 npm install
 ```
 
-### 3. Rodando o Servidor Web e Interface
-Para visualizar a interface no navegador e ter os endpoints de API disponíveis:
+**2. Iniciando a Interface**
+Para abrir o painel visual no seu navegador:
 ```bash
 npm run web
 ```
-Acesse `http://localhost:3000` no seu navegador.
+Acesse `http://localhost:3000`.
 
-### 4. Coletando Novas Oportunidades
-Para atualizar as oportunidades listadas na tela principal, abra outro terminal e execute o nosso robô para coletar as odds em tempo real da Betano:
+**3. Ligando o Robô (Buscador de Oportunidades)**
+Em outro terminal, inicie a busca em tempo real pelas surebets:
 ```bash
 npm run scrape
 ```
@@ -76,5 +92,5 @@ npm run scrape
 ---
 
 <div align="center">
-  Feito com dedicação e matemática 🧮
+  <i>Não conte com a sorte. Invista com a matemática.</i> 🧮📈
 </div>
