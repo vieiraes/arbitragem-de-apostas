@@ -1,41 +1,16 @@
 [
   {
-    "id": "86388417",
+    "id": "86734317",
     "liga": "Brasileirão - Série B",
-    "timeA": "Cuiabá",
-    "timeB": "CRB",
-    "oddA": 2.42,
-    "oddEmpate": 2.4,
-    "oddB": 4.15,
-    "ganhoPrevisto": 34.58,
-    "dataHora": "5/31/2026, 8:30:00 PM",
-    "url": "https://www.betano.bet.br/live/cuiaba-crb/86388417/",
-    "fonte": "Betano"
-  },
-  {
-    "id": "85915321",
-    "liga": "Brasileirão - Série A Betano",
-    "timeA": "Remo",
-    "timeB": "São Paulo",
-    "oddA": 3.75,
-    "oddEmpate": 2.8,
-    "oddB": 2.35,
-    "ganhoPrevisto": 30.78,
-    "dataHora": "5/31/2026, 8:30:00 PM",
-    "url": "https://www.betano.bet.br/live/remo-sao-paulo/85915321/",
-    "fonte": "Betano"
-  },
-  {
-    "id": "86388426",
-    "liga": "Brasileirão - Série B",
-    "timeA": "Ponte Preta",
-    "timeB": "Botafogo-SP",
-    "oddA": 2.87,
-    "oddEmpate": 3,
-    "oddB": 2.9,
-    "ganhoPrevisto": 30.67,
-    "dataHora": "6/1/2026, 7:00:00 PM",
-    "url": "https://www.betano.bet.br/odds/ponte-preta-botafogo-sp/86388426/",
-    "fonte": "Betano"
+    "timeA": "Operário-PR",
+    "timeB": "Juventude-RS",
+    "oddA": 2.25,
+    "oddEmpate": 2.75,
+    "oddB": 4,
+    "dataHora": "6/5/2026, 8:00:00 PM",
+    "url": "https://www.betano.bet.br/odds/operario-pr-juventude-rs/86734317/",
+    "fonte": "Betano",
+    "origem": "api",
+    "ganhoPrevisto": 30.56
   }
 ]

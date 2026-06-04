@@ -45,6 +45,26 @@ body {
     border-radius: 16px 16px 0 0 !important;
 }
 
+.oportunidades-hint {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.35;
+}
+
+.ultima-execucao-scrape {
+    color: #475569;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-top: 4px;
+}
+
+@media (max-width: 576px) {
+    .oportunidades-header {
+        flex-direction: column;
+    }
+}
+
 /* Inputs Modernos */
 .form-control {
     background-color: #ffffff;
@@ -94,6 +114,14 @@ body {
     color: white;
 }
 
+.btn-icon-action {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    min-height: 32px;
+    min-width: 32px;
+}
+
 /* Tabela Oportunidades */
 .table {
     color: var(--text-main);
@@ -116,7 +144,90 @@ body {
     color: var(--text-main);
 }
 
+.resumo-oportunidades-wrapper {
+    border-bottom: 1px solid #e2e8f0;
+    background: #ffffff;
+}
+
+.resumo-oportunidades-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+    border: 0;
+    background: #ffffff;
+    color: var(--text-main);
+    font-weight: 800;
+    text-align: left;
+}
+
+.resumo-oportunidades-toggle-icon {
+    color: var(--primary);
+    font-size: 0.9rem;
+}
+
+.resumo-oportunidades {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    padding: 0 16px 16px;
+}
+
+.resumo-oportunidades--collapsed {
+    display: none;
+}
+
+.resumo-oportunidade-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 58px;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.resumo-oportunidade-item span {
+    color: #475569;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.resumo-oportunidade-item strong {
+    color: var(--text-main);
+    font-size: 0.9rem;
+    line-height: 1.25;
+}
+
+.resumo-oportunidade-item--ativo {
+    border-color: rgba(16, 185, 129, 0.45);
+    background: rgba(16, 185, 129, 0.08);
+}
+
 /* Badges e Destaques */
+.odds-label-a {
+    color: #2563eb;
+    font-weight: 800;
+}
+
+.odds-label-b {
+    color: var(--primary);
+    font-weight: 800;
+}
+
+.odds-badge-a {
+    background: #2563eb !important;
+    color: white;
+}
+
+.odds-badge-b {
+    background: var(--primary) !important;
+    color: white;
+}
+
 .badge.bg-success {
     background: linear-gradient(135deg, var(--secondary), #059669) !important;
     box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);

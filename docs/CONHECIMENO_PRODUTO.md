@@ -17,7 +17,7 @@ O projeto é dividido basicamente em três partes: Frontend (Calculadora), Servi
 ### Backend (Servidor Estático)
 *   **Localização:** `src/server.js`
 *   **Tecnologias:** Node.js com Express.
-*   **Funcionalidades:** Um servidor extremamente simples configurado apenas para servir a pasta estática `src/public` durante o desenvolvimento local (porta 3000 por padrão). Executado via `npm run web`.
+*   **Funcionalidades:** Um servidor extremamente simples configurado apenas para servir a pasta estática `src/public` durante o desenvolvimento local (porta 3001 por padrão). Executado via `npm run web`.
 
 ### Web Scraper (Coleta de Dados)
 *   **Localização:** `src/scrapers/` (principalmente `betanoScraper.js`).

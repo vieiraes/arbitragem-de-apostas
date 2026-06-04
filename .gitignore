@@ -2,3 +2,9 @@
 *.env
 node_modules/
 .firebase/
+
+# Scraper debug/generated artifacts
+data/*dump*.json
+data/*.html
+data/*.png
+data/betano_jogos_*.json

@@ -5,19 +5,132 @@ puppeteer.use(StealthPlugin());
 const fs = require('fs');
 const path = require('path');
 
+function getChromeExecutablePath() {
+    const candidates = [
+        process.env.PUPPETEER_EXECUTABLE_PATH,
+        '/usr/bin/google-chrome',
+        '/usr/bin/chromium-browser',
+        '/usr/bin/chromium',
+        '/snap/bin/chromium',
+    ].filter(Boolean);
+
+    return candidates.find(candidate => fs.existsSync(candidate));
+}
+
+function calcularGanhoPrevisto(oddA, oddB) {
+    const investimento = (1 / oddA) + (1 / oddB);
+    const lucro = 1 - investimento;
+    return lucro * 100;
+}
+
+function filtrarOportunidades(eventos) {
+    return eventos
+        .filter(evento => evento.oddA > 0 && evento.oddB > 0)
+        .map(evento => ({
+            ...evento,
+            ganhoPrevisto: parseFloat(calcularGanhoPrevisto(evento.oddA, evento.oddB).toFixed(2)),
+        }))
+        .filter(evento => evento.ganhoPrevisto > 30)
+        .sort((a, b) => b.ganhoPrevisto - a.ganhoPrevisto);
+}
+
+function hasOdds(evento) {
+    return evento.oddA > 0 && evento.oddB > 0;
+}
+
+function deduplicateEventos(eventos) {
+    const eventosPorId = new Map();
+
+    eventos.forEach(evento => {
+        const existente = eventosPorId.get(evento.id);
+        if (!existente) {
+            eventosPorId.set(evento.id, evento);
+            return;
+        }
+
+        if (!hasOdds(existente) && hasOdds(evento)) {
+            eventosPorId.set(evento.id, evento);
+            return;
+        }
+
+        if (hasOdds(existente) && !hasOdds(evento)) {
+            return;
+        }
+
+        eventosPorId.set(evento.id, {
+            ...existente,
+            ...evento,
+            oddA: evento.oddA || existente.oddA,
+            oddEmpate: evento.oddEmpate || existente.oddEmpate,
+            oddB: evento.oddB || existente.oddB,
+        });
+    });
+
+    return Array.from(eventosPorId.values());
+}
+
+async function extrairEventosDoDom(page) {
+    return page.evaluate(() => {
+        function extrairOdd(selection) {
+            const ariaLabel = selection.getAttribute('aria-label') || '';
+            const match = ariaLabel.match(/odds\s+([\d.]+)/i);
+            if (match) return Number(match[1]);
+
+            const oddsText = selection.querySelector('.tw-font-bold')?.textContent?.trim();
+            return Number((oddsText || '').replace(',', '.'));
+        }
+
+        return Array.from(document.querySelectorAll('[data-qa="event-card"]')).map((card, index) => {
+            const link = card.querySelector('a[data-qa="pre-event"]');
+            const participantes = link?.getAttribute('data-testid') || '';
+            const [timeA = '', timeB = ''] = participantes.split(' - ').map(item => item.trim());
+
+            const selections = Array.from(card.querySelectorAll('[data-qa="event-selection"]'));
+            const oddsPorNome = selections.reduce((acc, selection) => {
+                const nome = selection.querySelector('.s-name')?.textContent?.trim();
+                if (nome) acc[nome] = extrairOdd(selection);
+                return acc;
+            }, {});
+
+            const spans = Array.from(card.querySelectorAll('span')).map(span => span.textContent.trim());
+            const data = spans.find(text => /^\d{1,2}\/\d{1,2}$/.test(text));
+            const hora = spans.find(text => /^\d{1,2}:\d{2}$/.test(text));
+
+            return {
+                id: card.getAttribute('data-evtid') || `betano-dom-${index}`,
+                liga: link?.getAttribute('title') || 'Futebol Brasil',
+                timeA,
+                timeB,
+                oddA: oddsPorNome['1'] || 0,
+                oddEmpate: oddsPorNome['X'] || 0,
+                oddB: oddsPorNome['2'] || 0,
+                dataHora: [data, hora].filter(Boolean).join(' '),
+                url: link?.getAttribute('href') ? `https://www.betano.bet.br${link.getAttribute('href')}` : null,
+                fonte: 'Betano',
+                origem: 'dom',
+            };
+        }).filter(evento => evento.timeA && evento.timeB);
+    });
+}
+
 async function scrapeBetano() {
-    console.log('Iniciando scraping via Interceptação de API da Betano (Série A e B)...');
+    console.log('Iniciando scraping da Betano...');
+
+    const executablePath = getChromeExecutablePath();
+    if (executablePath) {
+        console.log(`Usando navegador local: ${executablePath}`);
+    } else {
+        console.log('Nenhum Chrome local encontrado. Execute `npm run setup:chrome` ou configure PUPPETEER_EXECUTABLE_PATH.');
+    }
 
     const browser = await puppeteer.launch({
         headless: "new",
+        ...(executablePath ? { executablePath } : {}),
         args: [
-            '--proxy-server=http://proxy-server.scraperapi.com:8001',
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-features=IsolateOrigins,site-per-process',
-            '--disable-web-security'
         ],
-        ignoreHTTPSErrors: true
     });
 
     const publicDir = path.join(__dirname, '../public');
@@ -28,15 +141,10 @@ async function scrapeBetano() {
     try {
         const page = await browser.newPage();
 
-        // Autenticar no ScraperAPI
-        await page.authenticate({
-            username: 'scraperapi',
-            password: '051253436aab806cc07f27f90ef827db'
-        });
-
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
 
         let rawEventsData = [];
+        let eventosDom = [];
 
         page.on('response', async (response) => {
             const url = response.url();
@@ -62,10 +170,18 @@ async function scrapeBetano() {
         for (const targetUrl of urlsAlvo) {
             console.log(`Acessando: ${targetUrl}`);
             try {
-                await page.goto(targetUrl, { waitUntil: 'networkidle2', timeout: 30000 });
-                await new Promise(r => setTimeout(r, 4000));
+                await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 45000 });
             } catch (e) {
-                console.log(`Timeout ou erro ao acessar ${targetUrl}, continuando...`);
+                console.log(`Timeout ou erro ao acessar ${targetUrl}: ${e.message}`);
+            }
+
+            try {
+                await page.waitForSelector('[data-qa="event-card"]', { timeout: 15000 });
+                const eventosDaPagina = await extrairEventosDoDom(page);
+                eventosDom.push(...eventosDaPagina);
+                console.log(`Eventos extraídos do DOM nesta página: ${eventosDaPagina.length}`);
+            } catch (e) {
+                console.log(`Nenhum card de evento encontrado no DOM para ${targetUrl}: ${e.message}`);
             }
         }
 
@@ -94,7 +210,8 @@ async function scrapeBetano() {
             
         console.log(`Encontrei ${jogosUnicos.length} possíveis eventos únicos nos JSONs.`);
         
-        const jogosFormatados = [];
+        const eventosApiFormatados = [];
+        let eventosApiComOdds = 0;
         
         jogosUnicos.forEach((eventoRaw, index) => {
             try {
@@ -122,43 +239,68 @@ async function scrapeBetano() {
                     const urlAposta = eventoRaw.url ? `https://www.betano.bet.br${eventoRaw.url}` : null;
                     
                     if (oddA > 0 && oddB > 0) {
-                        // Cálculo do ganho previsto igual ao da calculadora (Baseado apenas em Time A e Time B)
-                        // Investimento necessário para retornar 1
-                        const investimento = (1 / oddA) + (1 / oddB);
-                        const lucro = 1 - investimento;
-                        const ganhoPrevistoPerc = lucro * 100;
-                        
-                        // O usuário pediu apenas ganhos > 30%
-                        if (ganhoPrevistoPerc > 30) {
-                            jogosFormatados.push({
-                                id: eventoRaw.id || `betano-${index}`,
-                                liga: liga,
-                                timeA,
-                                timeB,
-                                oddA,
-                                oddEmpate,
-                                oddB,
-                                ganhoPrevisto: parseFloat(ganhoPrevistoPerc.toFixed(2)),
-                                dataHora: new Date(timestamp).toLocaleString(),
-                                url: urlAposta,
-                                fonte: 'Betano'
-                            });
-                        }
+                        eventosApiComOdds += 1;
+                        eventosApiFormatados.push({
+                            id: eventoRaw.id || `betano-${index}`,
+                            liga: liga,
+                            timeA,
+                            timeB,
+                            oddA,
+                            oddEmpate,
+                            oddB,
+                            dataHora: new Date(timestamp).toLocaleString(),
+                            url: urlAposta,
+                            fonte: 'Betano',
+                            origem: 'api',
+                        });
                     }
                 }
             } catch(e) {}
         });
 
-        // Ordenar pelos maiores ganhos
-        jogosFormatados.sort((a, b) => b.ganhoPrevisto - a.ganhoPrevisto);
+        const eventosMapeados = [...eventosApiFormatados, ...eventosDom];
+        const eventosUnicos = deduplicateEventos(eventosMapeados);
+        const eventosComOdds = eventosUnicos.filter(hasOdds);
+        const jogosFormatados = filtrarOportunidades(eventosComOdds);
+
+        let status = 'success_with_opportunities';
+        if (eventosUnicos.length === 0) {
+            status = 'completed_no_events';
+        } else if (eventosComOdds.length === 0) {
+            status = 'completed_no_odds';
+        } else if (jogosFormatados.length === 0) {
+            status = 'success_no_opportunities';
+        }
+
+        const summary = {
+            status,
+            rawResponsesCaptured: rawEventsData.length,
+            apiEventsFound: jogosUnicos.length,
+            apiEventsWithOdds: eventosApiComOdds,
+            domEventsFound: eventosDom.length,
+            eventsFound: eventosUnicos.length,
+            eventsWithOdds: eventosComOdds.length,
+            opportunitiesFound: jogosFormatados.length,
+        };
         
         console.log(`Jogos com ganho > 30% encontrados: ${jogosFormatados.length}`);
+        console.log('Resumo do scraping:', summary);
         
         const jsonFilePath = path.join(publicDir, 'oportunidades.json');
         fs.writeFileSync(jsonFilePath, JSON.stringify(jogosFormatados, null, 2));
 
         console.log(`Dados salvos com sucesso em ${jsonFilePath}!`);
-        return jogosFormatados;
+        return {
+            opportunities: jogosFormatados,
+            rawData: {
+                source: 'Betano',
+                capturedAt: new Date().toISOString(),
+                targetUrls: urlsAlvo,
+                responses: rawEventsData,
+                domEvents: eventosDom,
+            },
+            summary,
+        };
 
     } catch (error) {
         console.error('Erro durante o scraping via API:', error);
@@ -173,6 +315,6 @@ module.exports = { scrapeBetano };
 
 if (require.main === module) {
     scrapeBetano()
-        .then(() => console.log('Scraping concluído com sucesso'))
+        .then(result => console.log('Scraping concluído com sucesso:', result.summary))
         .catch(err => console.error('Erro no scraping:', err));
 }

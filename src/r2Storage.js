@@ -11,35 +11,25 @@ const r2Client = new S3Client({
 
 const BUCKET_NAME = process.env.R2_BUCKET || 'bucket-cf';
 const OBJECT_KEY = 'oportunidades.json';
+const METADATA_KEY = 'oportunidades-meta.json';
+const RAW_BETANO_KEY = 'betano/raw/latest.json';
 
-/**
- * Faz upload do JSON de oportunidades para o Cloudflare R2.
- * @param {Array} data - Array de oportunidades
- */
-async function uploadOportunidades(data) {
-    const jsonString = JSON.stringify(data, null, 2);
-
+async function putJsonObject(key, data) {
     const command = new PutObjectCommand({
         Bucket: BUCKET_NAME,
-        Key: OBJECT_KEY,
-        Body: jsonString,
+        Key: key,
+        Body: JSON.stringify(data, null, 2),
         ContentType: 'application/json',
-        // Deixa o objeto acessível publicamente (requer bucket com acesso público habilitado no CF)
         CacheControl: 'no-cache, no-store, must-revalidate',
     });
 
     await r2Client.send(command);
-    console.log(`✅ JSON enviado para R2: ${BUCKET_NAME}/${OBJECT_KEY}`);
 }
 
-/**
- * Lê o JSON de oportunidades direto do R2 (fallback quando o arquivo local não existe).
- * @returns {Array} Array de oportunidades
- */
-async function downloadOportunidades() {
+async function getJsonObject(key) {
     const command = new GetObjectCommand({
         Bucket: BUCKET_NAME,
-        Key: OBJECT_KEY,
+        Key: key,
     });
 
     const response = await r2Client.send(command);
@@ -53,4 +43,41 @@ async function downloadOportunidades() {
     return JSON.parse(body);
 }
 
-module.exports = { uploadOportunidades, downloadOportunidades };
+/**
+ * Faz upload do JSON de oportunidades para o Cloudflare R2.
+ * @param {Array} data - Array de oportunidades
+ */
+async function uploadOportunidades(data) {
+    await putJsonObject(OBJECT_KEY, data);
+    console.log(`✅ JSON enviado para R2: ${BUCKET_NAME}/${OBJECT_KEY}`);
+}
+
+/**
+ * Lê o JSON de oportunidades direto do R2 (fallback quando o arquivo local não existe).
+ * @returns {Array} Array de oportunidades
+ */
+async function downloadOportunidades() {
+    return getJsonObject(OBJECT_KEY);
+}
+
+async function uploadScrapeMetadata(metadata) {
+    await putJsonObject(METADATA_KEY, metadata);
+    console.log(`✅ Metadados enviados para R2: ${BUCKET_NAME}/${METADATA_KEY}`);
+}
+
+async function downloadScrapeMetadata() {
+    return getJsonObject(METADATA_KEY);
+}
+
+async function uploadRawBetanoData(data) {
+    await putJsonObject(RAW_BETANO_KEY, data);
+    console.log(`✅ JSON bruto da Betano enviado para R2: ${BUCKET_NAME}/${RAW_BETANO_KEY}`);
+}
+
+module.exports = {
+    uploadOportunidades,
+    downloadOportunidades,
+    uploadScrapeMetadata,
+    downloadScrapeMetadata,
+    uploadRawBetanoData,
+};

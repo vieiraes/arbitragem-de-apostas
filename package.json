@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "web": "node src/server.js",
-    "scrape": "node src/scrapers/index.js"
+    "scrape": "node src/scrapers/index.js",
+    "setup:chrome": "npx puppeteer browsers install chrome"
   },
   "repository": {
     "type": "git",

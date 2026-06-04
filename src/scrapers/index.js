@@ -5,8 +5,9 @@ async function runAllScrapers() {
         console.log('Iniciando coleta de dados das casas de apostas...');
         
         console.log('\n--- Betano Scraper ---');
-        const betanoData = await scrapeBetano();
-        console.log(`Coletados ${betanoData.length} jogos da Betano\n`);
+        const betanoResult = await scrapeBetano();
+        console.log(`Eventos mapeados: ${betanoResult.summary.eventsFound}`);
+        console.log(`Oportunidades > 30%: ${betanoResult.summary.opportunitiesFound}\n`);
         
         // Aqui você pode adicionar outros scrapers no futuro
         // const bet365Data = await scrapeBet365();
@@ -14,7 +15,7 @@ async function runAllScrapers() {
         console.log('Todos os scrapers foram executados com sucesso!');
         
         return {
-            betano: betanoData,
+            betano: betanoResult,
             // outras casas de apostas podem ser adicionadas aqui
         };
     } catch (error) {

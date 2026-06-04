@@ -81,7 +81,7 @@ Para abrir o painel visual no seu navegador:
 ```bash
 npm run web
 ```
-Acesse `http://localhost:3000`.
+Acesse `http://localhost:3001`.
 
 **3. Ligando o Robô (Buscador de Oportunidades)**
 Em outro terminal, inicie a busca em tempo real pelas surebets:

@@ -16,20 +16,31 @@
             <div class="col-lg-8 col-md-10">
                 <!-- Oportunidades Section -->
                 <div class="card shadow mb-4">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center border-bottom pt-4 pb-3">
-                        <h5 class="card-title mb-0 fw-bold text-dark"><i class="fas fa-radar me-2" style="color: var(--primary);"></i> Oportunidades (Betano)</h5>
+                    <div class="card-header oportunidades-header bg-white d-flex justify-content-between align-items-start gap-3 border-bottom pt-4 pb-3">
                         <div>
-                            <button class="btn btn-sm btn-outline-secondary me-1" onclick="carregarOportunidades()" title="Recarregar Lista Local"><i class="fas fa-sync-alt"></i></button>
-                            <button id="btnScrape" class="btn btn-sm btn-primary" onclick="dispararScraping()"><i class="fas fa-robot me-2"></i> Buscar Novos Jogos</button>
+                            <h5 class="card-title mb-1 fw-bold text-dark"><i class="fas fa-radar me-2" style="color: var(--primary);"></i> Oportunidades (Betano)</h5>
+                            <p class="oportunidades-hint mb-0">Na primeira busca, podemos levar cerca de 1 minuto para preparar os dados.</p>
+                            <p id="ultimaExecucaoScrape" class="ultima-execucao-scrape mb-0">Última busca: aguardando atualização.</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary me-1 btn-icon-action" onclick="carregarOportunidades()" title="Recarregar lista local" aria-label="Recarregar lista local"><i class="fas fa-sync-alt"></i></button>
+                            <button id="btnScrape" class="btn btn-sm btn-primary btn-icon-action" onclick="dispararScraping()" title="Buscar novos jogos" aria-label="Buscar novos jogos"><i class="fas fa-robot"></i></button>
                         </div>
                     </div>
                     <div class="card-body p-0">
+                        <div class="resumo-oportunidades-wrapper">
+                            <button id="btnToggleResumo" class="resumo-oportunidades-toggle" type="button" onclick="alternarResumoOportunidades()" aria-expanded="false" aria-controls="resumoOportunidades" aria-label="Expandir resumo por competição" title="Expandir resumo por competição">
+                                <span><i class="fas fa-layer-group me-2"></i>Resumo por competição</span>
+                                <i class="fas fa-chevron-down resumo-oportunidades-toggle-icon" aria-hidden="true"></i>
+                            </button>
+                            <div id="resumoOportunidades" class="resumo-oportunidades resumo-oportunidades--collapsed"></div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0" id="tabelaOportunidades">
                                 <thead class="table-light">
                                     <tr>
                                         <th>Jogo</th>
-                                        <th>Odds (A / B)</th>
+                                        <th>Odds (<span class="odds-label-a">A</span> / <span class="odds-label-b">B</span>)</th>
                                         <th class="text-end">Ação</th>
                                     </tr>
                                 </thead>
@@ -67,7 +78,7 @@
                                 id="retornoDesejado" placeholder="Insira o valor que deseja obter de retorno">
                         </div>
 
-                        <button class="btn btn-primary w-100 mb-4 py-3 fs-5 fw-bold" onclick="calcularApostas()">
+                        <button class="btn btn-primary w-100 mb-4 py-3 fs-5 fw-bold" onclick="calcularApostas()" title="Calcular apostas" aria-label="Calcular apostas">
                             <i class="fas fa-calculator me-2"></i> Calcular
                         </button>
 
