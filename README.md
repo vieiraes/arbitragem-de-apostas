@@ -1,96 +1,202 @@
+
+---
+
+## O Produto
+
+O **Arbitragem de Apostas** ajuda a encontrar e calcular oportunidades entre dois resultados possíveis de um jogo: vitória do Time A ou vitória do Time B.
+
+A ferramenta monitora páginas da **Betano**, identifica jogos com odds válidas e exibe apenas oportunidades cujo ganho previsto seja maior que **30%**, usando a regra de negócio atual da aplicação.
+
+> Importante: a estratégia não cobre empate. A ferramenta é um apoio matemático para análise de odds, não uma garantia de lucro.
+
+---
 <div align="center">
-  <img src="./docs/hero.png" alt="Arbitragem de Apostas Banner" width="100%" />
-  <h1>Arbitragem de Apostas (Surebet)</h1>
-  <p><b>Transforme apostas esportivas em investimentos matemáticos com lucro garantido.</b></p>
+  <img src="./src/public/assets/sull_screen.png" alt="Tela principal do Arbitragem de Apostas" width="420" />
+  <h1>Arbitragem de Apostas</h1>
+  <p><b>Calculadora e monitor de oportunidades em odds de futebol.</b></p>
 
   <p>
-    <a href="#-o-que-é-o-produto">O Produto</a> •
-    <a href="#-como-funciona">Como Funciona</a> •
-    <a href="#-principais-recursos">Recursos</a> •
-    <a href="#-começando">Começando</a>
+    <a href="#o-produto">Produto</a> •
+    <a href="#como-funciona">Como funciona</a> •
+    <a href="#arquitetura">Arquitetura</a> •
+    <a href="#rodando-localmente">Rodando localmente</a>
   </p>
+</div>
+
+
+
+
+## Como Funciona
+
+1. O robô consulta competições monitoradas na Betano.
+2. O scraper coleta dados via respostas JSON e também faz fallback lendo os cards renderizados no DOM.
+3. Os dados brutos da última execução são salvos no Cloudflare R2.
+4. A regra de negócio filtra apenas oportunidades com ganho previsto acima de 30%.
+5. A interface exibe as oportunidades, a última execução bem-sucedida e um resumo por competição.
+
+Competições monitoradas hoje:
+
+- Copa do Brasil
+- Brasileirão Série A
+- Brasileirão Série B
+- Brasileirão Série C
+- Brasileirão Série D
+
+---
+
+## Interface
+
+<div align="center">
+  <img src="./src/public/assets/sull_screen.png" alt="Tela completa da aplicação" width="420" />
+</div>
+
+Principais recursos:
+
+- **Painel de oportunidades:** mostra jogos que passaram na regra de ganho acima de 30%.
+- **Resumo por competição:** informa quantas oportunidades existem no momento por campeonato.
+- **Status da coleta:** mostra a data/hora da última execução bem-sucedida.
+- **Feedback de demora:** informa que a primeira requisição pode demorar quando o serviço hospedado precisa acordar.
+- **Calculadora:** calcula quanto apostar em cada lado para o retorno desejado.
+
+### Oportunidades
+
+<div align="center">
+  <img src="./src/public/assets/oporunidades.png" alt="Painel de oportunidades da Betano" width="600" />
+</div>
+
+### Ganho Previsto
+
+<div align="center">
+  <img src="./src/public/assets/ganho_previsto.png" alt="Resumo de ganho previsto e cálculo de apostas" width="558" />
+</div>
+
+### Mobile
+
+<div align="center">
+  <img src="./src/public/assets/oporunidaades_at_mobile.png" alt="Painel de oportunidades em tela mobile" width="320" />
 </div>
 
 ---
 
-## 🎯 O que é o Produto?
+## Arquitetura
 
-O **Arbitragem de Apostas** não é uma plataforma de sorte, é uma ferramenta de **matemática financeira**. 
+O projeto usa:
 
-Muitas vezes, as cotações (odds) oferecidas para um mesmo jogo abrem margens interessantes. O nosso sistema varre a plataforma em tempo real e encontra oportunidades onde você pode apostar na **vitória de ambos os times**. Embora você perca em caso de empate, essa estratégia garante pelo menos **66.66% de chance de acerto** em cada partida.
+- **Frontend:** HTML, CSS, Bootstrap e JavaScript puro em `src/public`.
+- **Backend:** Express em `src/server.js`.
+- **Scraper:** Puppeteer em `src/scrapers/betanoScraper.js`.
+- **Persistência:** Cloudflare R2 via AWS SDK S3-compatible em `src/r2Storage.js`.
 
-Esqueça a intuição e a sorte. Transforme seu capital em rendimentos consistentes baseados em dados.
+Objetos salvos no R2:
 
----
+- `oportunidades.json`: oportunidades filtradas para consumo do front.
+- `betano/raw/latest.json`: dados brutos da última coleta.
+- `oportunidades-meta.json`: diagnóstico da última execução.
 
-## 🚀 A Interface
+Status possíveis da última execução:
 
-Desenhada para ser limpa, rápida e intuitiva. Você não precisa ser um expert em esportes, basta seguir os números.
-
-![Dashboard do Calculador](./docs/dashboard.png)
-
-A nossa interface oferece:
-- **Painel em Tempo Real:** Novas oportunidades de lucro aparecem automaticamente na sua tela.
-- **Calculadora Inteligente:** Você digita o quanto deseja investir, e o sistema diz exatamente quanto colocar em cada aposta para garantir o seu retorno.
-- **Design Premium:** Foco na leitura rápida dos dados para você não perder nenhuma oportunidade.
-
----
-
-## ⚙️ Como Funciona?
-
-Usar a plataforma é simples e requer apenas 3 passos:
-
-### 1. Encontre a Oportunidade
-Nosso robô trabalha nos bastidores, vasculhando exclusivamente a **Betano** (por enquanto). Ele monitora os jogos do **Brasileirão Séries A, B, C e D**, mas filtra inteligentemente e só traz para a sua tela as partidas que oferecem oportunidades com **odds maiores que 30% de chance de ganho**.
-
-### 2. Use a Calculadora
-Ao clicar na oportunidade, a calculadora se abre. Digite o seu **Objetivo de Retorno** ou o seu **Orçamento Disponível**. O sistema fará a matemática complexa instantaneamente.
-
-### 3. Faça as Entradas
-A plataforma te mostrará:
-* *"Coloque R$ 50,00 na vitória do Time A"*
-* *"Coloque R$ 15,00 na vitória do Time B"*
-
-Pronto! Ao focar apenas nas vitórias (66.66% de cobertura), você otimiza o seu orçamento e aumenta substancialmente o seu potencial de acerto.
+- `success_with_opportunities`: coleta válida com oportunidades encontradas.
+- `success_no_opportunities`: coleta válida, mas nenhuma oportunidade acima de 30%.
+- `completed_no_events`: a coleta terminou, mas não encontrou eventos analisáveis.
+- `completed_no_odds`: encontrou eventos, mas não conseguiu extrair odds válidas.
 
 ---
 
-## 🌟 Principais Recursos
+## Endpoints
 
-- **Automação Invisível:** O sistema coleta dados em tempo real direto da fonte, superando bloqueios tradicionais.
-- **Alta Probabilidade (66.66%):** Ao cobrir a vitória de ambos os times, o sistema aumenta as suas chances estatísticas de ter um resultado positivo.
-- **Sem Achismos:** O sistema te diz exatamente onde e quanto colocar o seu dinheiro.
-- **Fácil de Usar:** Feito para investidores, não apenas para apostadores.
+```http
+GET /api/oportunidades
+```
+
+Retorna as oportunidades filtradas salvas no R2.
+
+```http
+GET /api/oportunidades/status
+```
+
+Retorna metadados da última execução.
+
+```http
+POST /api/scrape
+```
+
+Executa o scraper, salva o bruto no R2, atualiza as oportunidades filtradas e retorna o resultado.
 
 ---
 
-## 🛠️ Começando (Para Desenvolvedores / Instalação)
+## Rodando Localmente
 
-Se você deseja rodar a sua própria instância do produto na sua máquina, siga os passos abaixo:
+**1. Instale as dependências**
 
-**1. Instalação**
-Certifique-se de ter o Node.js (v18+) instalado.
 ```bash
-git clone https://github.com/seu-usuario/arbitragem-de-apostas.git
-cd arbitragem-de-apostas
 npm install
 ```
 
-**2. Iniciando a Interface**
-Para abrir o painel visual no seu navegador:
+**2. Configure o `.env`**
+
+Variáveis esperadas:
+
+```env
+PORT=3001
+R2_ENDPOINT=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_BUCKET=
+```
+
+**3. Garanta o Chrome para o Puppeteer**
+
+Se sua máquina já tiver Chrome/Chromium instalado, o scraper tenta usar automaticamente.
+
+Se precisar baixar o Chrome do Puppeteer:
+
+```bash
+npm run setup:chrome
+```
+
+**4. Suba a aplicação**
+
 ```bash
 npm run web
 ```
-Acesse `http://localhost:3001`.
 
-**3. Ligando o Robô (Buscador de Oportunidades)**
-Em outro terminal, inicie a busca em tempo real pelas surebets:
+Acesse:
+
+```text
+http://localhost:3001
+```
+
+**5. Execute o scraper**
+
+Pelo botão da interface ou via endpoint:
+
+```bash
+curl -X POST http://localhost:3001/api/scrape
+```
+
+Também é possível rodar direto:
+
 ```bash
 npm run scrape
 ```
 
 ---
 
-<div align="center">
-  <i>Não conte com a sorte. Invista com a matemática.</i> 🧮📈
-</div>
+## Deploy
+
+O projeto possui configuração para Render em `render.yaml`.
+
+No plano gratuito, o serviço pode ficar inativo. Por isso, a primeira requisição pode demorar mais enquanto a aplicação inicializa.
+
+---
+
+## Dados Gerados
+
+Dumps brutos locais e artefatos de debug do scraper não devem ser versionados. O projeto usa `.gitignore` para ignorar arquivos como:
+
+- `data/*dump*.json`
+- `data/*.html`
+- `data/*.png`
+- `data/betano_jogos_*.json`
+
+O bruto oficial da última coleta deve ficar no R2, não no repositório.
